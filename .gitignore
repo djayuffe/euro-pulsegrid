@@ -1,0 +1,7 @@
+# Generated C64 release artifacts
+/build/
+
+# Local tooling and editor state
+.DS_Store
+__pycache__/
+*.py[cod]

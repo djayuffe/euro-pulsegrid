@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import re, json, sys
-ROOT=Path(__file__).resolve().parents[1]
-ASM=ROOT/'src'/'euro_pulsegrid.asm'
+ROOT=Path(__file__).resolve().parents[2]
+ASM=ROOT/'C64 Structure'/'src'/'euro_pulsegrid.asm'
 asm=ASM.read_text()
 asm_nc='\n'.join(line.split(';',1)[0] for line in asm.splitlines())
 problems=[]
 required=[
-('FX_BAND_COLS  = 35','v9.1 FX-band width contract'),
+('FX_BAND_COLS  = 35','V1.0 FX-band width contract'),
 ('V9.0_RETINAL_CONTRAST_HOTPATH_BLACK_LOCK','v9.0 marker'),
 ('visual_draw_cube_retinal_contrast_lock:','v9.0 retinal contrast routine'),
 ('retinal_contrast_lock_frame_lo:','v9.0 retinal contrast frame table'),
@@ -154,7 +154,7 @@ required=[
 ('visual_draw_cube_apex_flash:','v5.5 apex flash routine'),
 ('apex_flash_frame_lo:','v5.5 apex flash frame table'),
 ('apex_flash_color_cycle:','v5.5 apex flash color cycle'),
-('EURO PULSEGRID V3.9 STARPTR ROI','title'),
+('EURO PULSEGRID V1.0 RELEASE','title'),
 ('V3.8_BEATSCALE_GATE_ROI','v3.8 marker'),
 ('V5.5_PERFECT_SNAP_CLOSURE_FX','v5.4 marker'),
 ('visual_draw_cube_crystal_snap:','v5.4 crystal snap routine'),
@@ -471,7 +471,7 @@ report={
  'v4_2_shadow_depth_illusion': all(x in asm for x in ['V4.2_SHADOW_DEPTH_ILLUSION','visual_draw_cube_cast_shadow:','visual_draw_cube_occlusion:','cast_shadow_frame_lo:','occlusion_frame_lo:']),
  'v4_1_detailmax_colour_fx': all(x in asm for x in ['V4.1_DETAILMAX_COLOUR_FX','visual_draw_cube_depth_dots:','visual_draw_cube_accents:','depth_dot_frame_lo:','accent_frame_lo:','accent_color_cycle:']),
  'v3_9_starptr_roi': all(x in asm for x in ['V3.9_STARPTR_ROI','star_screen_lo:','star_screen_hi:','V3.9 ROI: rows are fixed']) and (re.search(r'(?ms)^visual_draw_starfield:.*?^star_cols:', asm_nc) is not None) and 'star_rows' not in re.search(r'(?ms)^visual_draw_starfield:.*?^star_cols:', asm_nc).group(0),
- 'v9_1_cycle_hotpath_black_lock': all(x in asm for x in ['V9.1_CYCLE_HOTPATH_BLACK_LOCK','COLOR_PTR  = $3f','35-column absolute-store bounded IRQ clear','inline the common detail plotter']) and 'sta (COLOR_PTR),y' in asm,
+ 'v1_0_cycle_hotpath_black_lock': all(x in asm for x in ['V1.0_CYCLE_HOTPATH_BLACK_LOCK','COLOR_PTR  = $3f','35-column absolute-store bounded IRQ clear','inline the common detail plotter']) and 'sta (COLOR_PTR),y' in asm,
  'v9_0_retinal_contrast_hotpath_black_lock': all(x in asm for x in ['V9.0_RETINAL_CONTRAST_HOTPATH_BLACK_LOCK','visual_draw_cube_retinal_contrast_lock:','retinal_contrast_lock_frame_lo:','retinal_contrast_lock_color_cycle','retinal contrast + edge completion']) and 'adc star_phase' not in re.search(r'(?ms)^visual_draw_cube_retinal_contrast_lock:.*?^visual_draw_cube_depth_dots:', asm_nc).group(0),
  'problems':problems
 }

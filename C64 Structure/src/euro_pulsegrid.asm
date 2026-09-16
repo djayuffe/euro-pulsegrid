@@ -1,6 +1,6 @@
-; V9.1_CYCLE_HOTPATH_BLACK_LOCK
+; V1.0_CYCLE_HOTPATH_BLACK_LOCK
 ; =====================================================================
-; EURO PULSEGRID V9.0 RETINAL CONTRAST HOTPATH BLACK LOCK / EURO PULSEGRID V3.9 STARPTR ROI
+; EURO PULSEGRID V1.0 RELEASE / EURO PULSEGRID V9.0 RETINAL CONTRAST HOTPATH BLACK LOCK
 ; V9.0_RETINAL_CONTRAST_HOTPATH_BLACK_LOCK
 ; - Adds retinal contrast/edge-completion cue: near/far opponent micro-pairs that exploit
 ;   simultaneous contrast + closure, phase-locked to cube/body motion and kept x<=19.
@@ -175,7 +175,7 @@ PAT_DRUM = $fd
 ; Visualizer zero-page pointers. Required for (zp),Y indirect addressing.
 VISUAL_PTR = $02
 CUBE_PTR   = $04
-COLOR_PTR  = $3f  ; V9.1: dedicated colour-RAM pointer for plot hotpaths
+COLOR_PTR  = $3f  ; V1.0: dedicated colour-RAM pointer for plot hotpaths
 
 ; V3.7 high-ROI zero-page promotion. These hot runtime bytes are touched
 ; from IRQ/music/visual plot paths. ZP saves one cycle per direct access
@@ -238,7 +238,7 @@ visual_pre_sync  = $3b  ; V4.9: one-frame lookahead pulse, cleared on the real t
 visual_light_gate= $3c  ; V5.0: short peak-only light latch; prevents flash FX from following long SID envelope tails
 visual_phase_lead= $3d  ; V5.0: visual-only table phase lead, set by prefetch/real hit and decayed after draw
 star_color_index = $3e  ; V7.9: imported uploaded fix, cache star_phase & 7 once per frame for all colour cycles
-ZP_RUNTIME_END   = $41  ; V9.1: include COLOR_PTR ($3f/$40) in zero-page clear block
+ZP_RUNTIME_END   = $41  ; V1.0: include COLOR_PTR ($3f/$40) in zero-page clear block
 
 SCREEN_RAM = $0400
 COLOR_RAM  = $d800
@@ -1128,7 +1128,7 @@ visual_redraw:
         sta vis_frame
         jsr visual_update_beat_scale
         jsr visual_pick_style       ; V3.5: also caches flash_color
-        jsr visual_clear_fx_band   ; V9.1: narrow 0..34 clear; post-scrub owns 35..39
+        jsr visual_clear_fx_band   ; V1.0: narrow 0..34 clear; post-scrub owns 35..39
         jsr visual_update_color_phase_no_stars ; V8.6: no starfield drawing
         lda cube_glow_env          ; V3.6: avoid dead tail JSR when no glow/tail
         beq visual_update_no_tail
@@ -1663,7 +1663,7 @@ visual_style_no_pshhh:
         sta vis_color
 visual_style_done:
         ; V3.5: cache final border/flash color here too (V8.7 collapses it to black).
-        ; V8.7/V9.1: no-border hotpath optimization.  V8.6 removed visible border
+        ; V8.7/V1.0: no-border hotpath optimization.  V8.6 removed visible border
         ; effects and V8.7 final-locks $d020 black, so the old flash_color
         ; section/beat decision tree is dead runtime work.  Keep flash_color
         ; deterministic for compatibility and jump straight to depth caches.
@@ -1693,7 +1693,7 @@ visual_depth_nonchorus_cache:
 
 ; ---------------------------------------------------------------------
 ; V3.3 absolute-store bounded IRQ clear.
-; V9.1 cycle hotpath: 35-column absolute-store bounded IRQ clear.
+; V1.0 cycle hotpath: 35-column absolute-store bounded IRQ clear.
 ; V6.1+ live plotters clamp to x<=34 and V5.9 post-draw scrub owns
 ; columns 35..39, so the pre-clear no longer wastes stores there.
 ; No X/Y loop, no pointer math, no mul40, no screen/color delta in runtime clear.
@@ -2384,7 +2384,7 @@ visual_clear_fx_band:
         sta SCREEN_RAM+842
         sta SCREEN_RAM+841
         sta SCREEN_RAM+840
-        lda #$00              ; V9.1/V7.8: blank backdrop colour is black
+        lda #$00              ; V1.0/V7.8: blank backdrop colour is black
 ; clear color row 3 cols 0..34
         sta COLOR_RAM+154
         sta COLOR_RAM+153
@@ -3179,7 +3179,7 @@ visual_tail_done:
         rts
 
 visual_plot_tail:
-        ; V9.1: COLOR_PTR hotpath avoids mutating VISUAL_PTR high byte.
+        ; V1.0: COLOR_PTR hotpath avoids mutating VISUAL_PTR high byte.
         ; Tail/decay points use the same safe viewport as main plot.
         lda plot_x
         cmp #35
@@ -3239,7 +3239,7 @@ visual_shadow_done:
         rts
 
 visual_plot_shadow:
-        ; V9.1: COLOR_PTR hotpath; shifted shadow never reaches edge scrub band.
+        ; V1.0: COLOR_PTR hotpath; shifted shadow never reaches edge scrub band.
         lda plot_x
         cmp #35
         bcs visual_plot_shadow_skip
@@ -3330,7 +3330,7 @@ visual_draw_done:
         rts
 
 visual_plot:
-        ; V9.1: main cube COLOR_PTR hotpath. Main cube writes remain clamped
+        ; V1.0: main cube COLOR_PTR hotpath. Main cube writes remain clamped
         ; away from columns 35..39 before pointer math.
         lda plot_x
         cmp #35
@@ -3383,7 +3383,7 @@ visual_plot_beat_scale:
         ; V3.8: caller has already verified cube_scale_env >= 6.
 visual_scale_extra_right:
         lda plot_x
-        ; V6.0/V9.1: x+1 expansion must also stay inside safe viewport.
+        ; V6.0/V1.0: x+1 expansion must also stay inside safe viewport.
         cmp #34
         bcs visual_scale_extra_down_check
         ldx plot_y
@@ -5266,7 +5266,7 @@ visual_detail_loop:
         lda (CUBE_PTR),y
         sta plot_y
         iny
-        ; V9.1: inline the common detail plotter. This removes one JSR/RTS
+        ; V1.0: inline the common detail plotter. This removes one JSR/RTS
         ; per overlay point while keeping the safe x/y guard and COLOR_PTR path.
         sty cube_y_save
         lda plot_x
@@ -5299,7 +5299,7 @@ visual_detail_done:
         rts
 
 visual_plot_detail:
-        ; V9.1 compatibility entry for any external/manual calls. Normal
+        ; V1.0 compatibility entry for any external/manual calls. Normal
         ; overlay tables use the inlined visual_detail_loop_start hotpath above.
         lda plot_x
         cmp #35

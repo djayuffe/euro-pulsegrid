@@ -1,13 +1,12 @@
 # Changelog
 
-## v1.0 — First release
+## V9.1 — Cycle hotpath black lock
 
-- Promoted Euro Pulsegrid to its first stable release.
-- Moved all C64 implementation material into `C64 Structure/`, separating it cleanly from root release metadata.
-- Documented the build variants, raster IRQ model, SID sequencer, visual pipeline, memory use, safety boundaries, and audit process.
-- Preserved the established 35-column live viewport, black background, sealed right edge, and dedicated colour-RAM pointer hot paths.
-- Renamed generated artifacts to the stable `euro-pulsegrid-v1.0-*` scheme.
+- Reduced the frame-clear work to the live 35-column viewport; the post-draw scrub owns columns 35–39.
+- Added a dedicated `COLOR_PTR` zero-page pointer so plot paths no longer repurpose the screen pointer for colour RAM.
+- Inlined the shared detail/overlay plot loop while retaining coordinate guards.
+- Corrected release metadata, build artifact names, audit reporting, and Git hygiene.
 
-## Pre-release development
+## Earlier visual milestones
 
-The pre-1.0 work established the raster-safe visualizer, table-driven SID sequence, reactive depth stack, black-background style, and right-edge no-wrap contract that ship in v1.0.
+V9.0 added retinal contrast cues; V8.6 locked the border/background and removed star drawing; V5.8–V6.1 introduced the no-wrap viewport and edge scrub.

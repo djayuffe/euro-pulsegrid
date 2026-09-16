@@ -2,13 +2,13 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_FILE="C64 Structure/src/euro_pulsegrid.asm"
+SOURCE_FILE="src/euro_pulsegrid.asm"
 BUILD_DIR="build"
 PROJECT_NAME="euro-pulsegrid"
-VERSION="v1.0"
+VERSION="v9.1"
 
 cd "$ROOT_DIR"
-python3 "C64 Structure/tools/audit_release.py"
+python3 tools/audit_release.py
 mkdir -p "$BUILD_DIR"
 
 OUTPUT_PREFIX="$BUILD_DIR/$PROJECT_NAME-$VERSION"

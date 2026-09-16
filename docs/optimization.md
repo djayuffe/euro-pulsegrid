@@ -1,6 +1,6 @@
 # Optimization audit
 
-V9.1’s performance-sensitive changes are deliberately narrow and guarded:
+The current performance-sensitive changes are deliberately narrow and guarded:
 
 - The FX clear covers rows 3–21 and columns 0–34 using absolute stores; columns 35–39 are sealed after drawing.
 - `COLOR_PTR` keeps colour-RAM addressing independent of `VISUAL_PTR` in main, tail, shadow, scale, and detail plotters.

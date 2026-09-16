@@ -1,6 +1,6 @@
 # Changelog
 
-## V9.1 — Cycle hotpath black lock
+## Current release — Cycle hotpath black lock
 
 - Reduced the frame-clear work to the live 35-column viewport; the post-draw scrub owns columns 35–39.
 - Added a dedicated `COLOR_PTR` zero-page pointer so plot paths no longer repurpose the screen pointer for colour RAM.
